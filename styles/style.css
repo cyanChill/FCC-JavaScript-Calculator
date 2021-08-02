@@ -368,5 +368,6 @@ body #display #prev-input {
   font-size: 20px;
   color: orange;
   word-break: break-all;
+  min-height: 30px;
 }
 /*# sourceMappingURL=style.css.map */
