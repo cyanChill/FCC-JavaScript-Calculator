@@ -56,21 +56,23 @@ body {
             }
         }
         ##{$key}:hover {
-            color: black;
-            border: 1px solid #808080;
-            margin: 0;
-
-            @if $type == num {
-                background-color: #4D4D4D;
-            }
-            @else if $type == operator {
-                background-color: #666666;
-            }
-            @else if $type == equals {
-                background-color: #004466;
-            }
-            @else if $type == AC {
-                background-color: #AC3939;
+            @if $type != display {
+                color: black;
+                border: 1px solid #808080;
+                margin: 0;
+    
+                @if $type == num {
+                    background-color: #666666;
+                }
+                @else if $type == operator {
+                    background-color: #8d8d8d;
+                }
+                @else if $type == equals {
+                    background-color: #065e8a;
+                }
+                @else if $type == AC {
+                    background-color: #c55252;
+                }
             }
         }
     }
