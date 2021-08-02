@@ -1,1 +1,378 @@
-/* No CSS *//*# sourceMappingURL=style.css.map */
+@font-face {
+  font-family: "Calculator";
+  src: url("//db.onlinewebfonts.com/t/ce4b0ee545ec52c2ec8cec62d23ffb09.eot");
+  src: url("//db.onlinewebfonts.com/t/ce4b0ee545ec52c2ec8cec62d23ffb09.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/ce4b0ee545ec52c2ec8cec62d23ffb09.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/ce4b0ee545ec52c2ec8cec62d23ffb09.woff") format("woff"), url("//db.onlinewebfonts.com/t/ce4b0ee545ec52c2ec8cec62d23ffb09.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/ce4b0ee545ec52c2ec8cec62d23ffb09.svg#Calculator") format("svg");
+}
+
+body {
+  font-family: "Tahoma";
+  font-size: 20px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  height: 100vh;
+}
+
+body #project-container {
+  padding: 5px;
+  background-color: black;
+  border-radius: 0.25em;
+  border: 0.125em solid black;
+  width: 300px;
+  display: -ms-grid;
+  display: grid;
+      grid-template-areas: "display display display display" "clear clear divide multiply" "seven eight nine subtract" "four five six add" "one two three equals" "zero zero decimal equals";
+  -ms-grid-columns: (25%)[4];
+      grid-template-columns: repeat(4, 25%);
+  -ms-grid-rows: auto (60px)[5];
+      grid-template-rows: auto repeat(5, 60px);
+}
+
+body #zero {
+  -ms-grid-row: 6;
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 2;
+  grid-area: zero;
+  text-align: center;
+  color: white;
+  border: none;
+  margin: 1px;
+  background-color: #4D4D4D;
+}
+
+body #zero:hover {
+  color: black;
+  border: 1px solid #808080;
+  margin: 0;
+  background-color: #4D4D4D;
+}
+
+body #one {
+  -ms-grid-row: 5;
+  -ms-grid-column: 1;
+  grid-area: one;
+  text-align: center;
+  color: white;
+  border: none;
+  margin: 1px;
+  background-color: #4D4D4D;
+}
+
+body #one:hover {
+  color: black;
+  border: 1px solid #808080;
+  margin: 0;
+  background-color: #4D4D4D;
+}
+
+body #two {
+  -ms-grid-row: 5;
+  -ms-grid-column: 2;
+  grid-area: two;
+  text-align: center;
+  color: white;
+  border: none;
+  margin: 1px;
+  background-color: #4D4D4D;
+}
+
+body #two:hover {
+  color: black;
+  border: 1px solid #808080;
+  margin: 0;
+  background-color: #4D4D4D;
+}
+
+body #three {
+  -ms-grid-row: 5;
+  -ms-grid-column: 3;
+  grid-area: three;
+  text-align: center;
+  color: white;
+  border: none;
+  margin: 1px;
+  background-color: #4D4D4D;
+}
+
+body #three:hover {
+  color: black;
+  border: 1px solid #808080;
+  margin: 0;
+  background-color: #4D4D4D;
+}
+
+body #four {
+  -ms-grid-row: 4;
+  -ms-grid-column: 1;
+  grid-area: four;
+  text-align: center;
+  color: white;
+  border: none;
+  margin: 1px;
+  background-color: #4D4D4D;
+}
+
+body #four:hover {
+  color: black;
+  border: 1px solid #808080;
+  margin: 0;
+  background-color: #4D4D4D;
+}
+
+body #five {
+  -ms-grid-row: 4;
+  -ms-grid-column: 2;
+  grid-area: five;
+  text-align: center;
+  color: white;
+  border: none;
+  margin: 1px;
+  background-color: #4D4D4D;
+}
+
+body #five:hover {
+  color: black;
+  border: 1px solid #808080;
+  margin: 0;
+  background-color: #4D4D4D;
+}
+
+body #six {
+  -ms-grid-row: 4;
+  -ms-grid-column: 3;
+  grid-area: six;
+  text-align: center;
+  color: white;
+  border: none;
+  margin: 1px;
+  background-color: #4D4D4D;
+}
+
+body #six:hover {
+  color: black;
+  border: 1px solid #808080;
+  margin: 0;
+  background-color: #4D4D4D;
+}
+
+body #seven {
+  -ms-grid-row: 3;
+  -ms-grid-column: 1;
+  grid-area: seven;
+  text-align: center;
+  color: white;
+  border: none;
+  margin: 1px;
+  background-color: #4D4D4D;
+}
+
+body #seven:hover {
+  color: black;
+  border: 1px solid #808080;
+  margin: 0;
+  background-color: #4D4D4D;
+}
+
+body #eight {
+  -ms-grid-row: 3;
+  -ms-grid-column: 2;
+  grid-area: eight;
+  text-align: center;
+  color: white;
+  border: none;
+  margin: 1px;
+  background-color: #4D4D4D;
+}
+
+body #eight:hover {
+  color: black;
+  border: 1px solid #808080;
+  margin: 0;
+  background-color: #4D4D4D;
+}
+
+body #nine {
+  -ms-grid-row: 3;
+  -ms-grid-column: 3;
+  grid-area: nine;
+  text-align: center;
+  color: white;
+  border: none;
+  margin: 1px;
+  background-color: #4D4D4D;
+}
+
+body #nine:hover {
+  color: black;
+  border: 1px solid #808080;
+  margin: 0;
+  background-color: #4D4D4D;
+}
+
+body #decimal {
+  -ms-grid-row: 6;
+  -ms-grid-column: 3;
+  grid-area: decimal;
+  text-align: center;
+  color: white;
+  border: none;
+  margin: 1px;
+  background-color: #4D4D4D;
+}
+
+body #decimal:hover {
+  color: black;
+  border: 1px solid #808080;
+  margin: 0;
+  background-color: #4D4D4D;
+}
+
+body #add {
+  -ms-grid-row: 4;
+  -ms-grid-column: 4;
+  grid-area: add;
+  text-align: center;
+  color: white;
+  border: none;
+  margin: 1px;
+  background-color: #666666;
+}
+
+body #add:hover {
+  color: black;
+  border: 1px solid #808080;
+  margin: 0;
+  background-color: #666666;
+}
+
+body #subtract {
+  -ms-grid-row: 3;
+  -ms-grid-column: 4;
+  grid-area: subtract;
+  text-align: center;
+  color: white;
+  border: none;
+  margin: 1px;
+  background-color: #666666;
+}
+
+body #subtract:hover {
+  color: black;
+  border: 1px solid #808080;
+  margin: 0;
+  background-color: #666666;
+}
+
+body #multiply {
+  -ms-grid-row: 2;
+  -ms-grid-column: 4;
+  grid-area: multiply;
+  text-align: center;
+  color: white;
+  border: none;
+  margin: 1px;
+  background-color: #666666;
+}
+
+body #multiply:hover {
+  color: black;
+  border: 1px solid #808080;
+  margin: 0;
+  background-color: #666666;
+}
+
+body #divide {
+  -ms-grid-row: 2;
+  -ms-grid-column: 3;
+  grid-area: divide;
+  text-align: center;
+  color: white;
+  border: none;
+  margin: 1px;
+  background-color: #666666;
+}
+
+body #divide:hover {
+  color: black;
+  border: 1px solid #808080;
+  margin: 0;
+  background-color: #666666;
+}
+
+body #equals {
+  -ms-grid-row: 5;
+  -ms-grid-row-span: 2;
+  -ms-grid-column: 4;
+  grid-area: equals;
+  text-align: center;
+  color: white;
+  border: none;
+  margin: 1px;
+  background-color: #004466;
+}
+
+body #equals:hover {
+  color: black;
+  border: 1px solid #808080;
+  margin: 0;
+  background-color: #004466;
+}
+
+body #clear {
+  -ms-grid-row: 2;
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 2;
+  grid-area: clear;
+  text-align: center;
+  color: white;
+  border: none;
+  margin: 1px;
+  background-color: #AC3939;
+}
+
+body #clear:hover {
+  color: black;
+  border: 1px solid #808080;
+  margin: 0;
+  background-color: #AC3939;
+}
+
+body #display {
+  -ms-grid-row: 1;
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 4;
+  grid-area: display;
+  text-align: center;
+  color: white;
+  border: none;
+  margin: 1px;
+}
+
+body #display:hover {
+  color: black;
+  border: 1px solid #808080;
+  margin: 0;
+}
+
+body #display {
+  font-family: "Calculator", sans-serif;
+  font-size: 28px;
+  text-align: right !important;
+}
+
+body #display p {
+  margin: 0;
+}
+
+body #display #prev-input {
+  font-size: 20px;
+  color: orange;
+  word-break: break-all;
+}
+/*# sourceMappingURL=style.css.map */
