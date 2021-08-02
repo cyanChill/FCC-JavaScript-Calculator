@@ -71,7 +71,7 @@ class App extends React.Component {
         this.state = {
             totalVal: '',
             currVal: '0',
-            prevComputed: 0,
+            prevComputed: '',
             prevEntry: '',
             hasDecimal: false,
         };
@@ -96,7 +96,7 @@ class App extends React.Component {
             this.setState({
                 totalVal: '',
                 currVal: '0',
-                prevComputed: 0,
+                prevComputed: '',
                 prevEntry: '',
                 hasDecimal: false,
             });
@@ -121,6 +121,9 @@ class App extends React.Component {
                 if (currIn.display === '-') {
                     if (prevEntry.display === '-' && (twoBefore === '-' || twoBefore === '+' || twoBefore === '/' || twoBefore === '×')) {
                         newTotalVal = totalVal;
+                    }
+                    if (totalVal.length === 1 && prevEntry.display === '-') {
+                        newTotalVal = '-';
                     }
                     newCurrVal = '-';
                 // If input ins't subtraction
@@ -155,6 +158,12 @@ class App extends React.Component {
             if (newCurrVal.length > 22 || invalid) {
                 newTotalVal = totalVal;
                 newCurrVal = currVal;
+                $('#user-input').text('DIGIT LIMIT MET');
+                $('.num').attr('disabled');
+                setTimeout(() => {
+                    $('#user-input').text(this.state.currVal);
+                    $('.num').removeAttr('disabled');
+                }, 1000);
             }
             
             this.setState({
@@ -167,8 +176,13 @@ class App extends React.Component {
 
 
     // Handle final calculations
-    handleSubmit(event) {
+    handleSubmit() {
         console.log("Doing calculations");
+        const regex = /[+\-\/×]/;
+        console.log(this.state.totalVal.split(regex))
+        // Find index where the string is
+        // Check following 2 inputs (see for symbols)
+        console.log(0.5 + +"0.5")
         
     }
 
@@ -176,7 +190,7 @@ class App extends React.Component {
 
     render() {
         const COMPONENTS = Object.entries(CALC_COMPONENTS).map((e) => {
-            return <button id={e[0]} key={e[0]} onClick={this.handleAction}>{e[1].display}</button>
+            return <button id={e[0]} key={e[0]} onClick={this.handleAction} className={e[1].type}>{e[1].display}</button>
         });
 
         return (
