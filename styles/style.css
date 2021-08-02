@@ -364,6 +364,10 @@ body #display p {
   margin: 0;
 }
 
+body #display #user-input {
+  min-height: 30px;
+}
+
 body #display #prev-input {
   font-size: 20px;
   color: orange;
