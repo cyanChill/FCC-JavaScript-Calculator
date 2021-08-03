@@ -176,10 +176,6 @@ class App extends React.Component {
         }
     }
 
-    /* 
-        Need to modify handleAction to take into account of the previous results if there's any
-    */
-
 
     // Handle final calculations
     handleSubmit() {
@@ -196,6 +192,7 @@ class App extends React.Component {
         } else {
             let values;
             const prevComputed = this.state.prevComputed.toString();
+            // Check to see if our previously computed number contains an 'e'
             if (compute.indexOf('e') == -1) {
                 values = compute.split(/[+\-\/*]/);
             } else {
@@ -203,10 +200,6 @@ class App extends React.Component {
                 values = compute.split(/[+\-\/*]/);
                 values.unshift(prevComputed);
             }
-
-            console.log("Values:")
-            console.log(values)
-            console.log(compute)
 
             // Starts with a '*' or '/'
             if (values[0] === '' && compute[0] !== '+' && compute[0] !== '-') {
@@ -220,11 +213,6 @@ class App extends React.Component {
                 result = values[0] === '' ? 0 : +values[0];
                 compute = compute.substring(compute.indexOf(values[0]) + values[0].length);
                 values.shift();
-
-                console.log(`values:`)
-                console.log(values)
-                console.log(`compute:`)
-                console.log(compute)
 
                 while (values.length > 0) {
                     // Only 1 operator before start of next number
@@ -260,11 +248,11 @@ class App extends React.Component {
         this.setState({
             totalVal: result,
             prevComputed: result,
+            currVal: '',
+        }, () => {
+            $('#user-input').text(result);
+            $('#prev-input').text(beforeResult + `=${result}`);
         });
-
-        $('#user-input').text(result);
-        $('#prev-input').text(beforeResult + `=${result}`);
-
     }
 
 
