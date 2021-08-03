@@ -180,7 +180,7 @@ class App extends React.Component {
 
     // Handle final calculations
     handleSubmit() {
-        let compute = this.state.formula.replace(/×/g, '*');
+        let compute = this.state.formula;
         let result = '';
         let beforeResult = '';
         // No input, only 1 or 2 operators as input
@@ -195,14 +195,14 @@ class App extends React.Component {
             const prevComputed = this.state.prevComputed.toString();
             // Check to see if our previously computed number contains an 'e'
             if (compute.indexOf('e') == -1) {
-                values = compute.split(/[+\-\/*]/);
+                values = compute.split(/[+\-\/×]/);
             } else {
                 compute = compute.substring(compute.indexOf(prevComputed) + prevComputed.length);
-                values = compute.split(/[+\-\/*]/);
+                values = compute.split(/[+\-\/×]/);
                 values.unshift(prevComputed);
             }
 
-            // Starts with a '*' or '/'
+            // Starts with a '×' or '/'
             if (values[0] === '' && compute[0] !== '+' && compute[0] !== '-') {
                 result = 'NaN';
             } else {
@@ -222,7 +222,7 @@ class App extends React.Component {
                             result += +values[0];
                         } else if (compute[0] === '-') {
                             result -= +values[0];
-                        } else if (compute[0] === '*') {
+                        } else if (compute[0] === '×') {
                             result *= +values[0];
                         } else if (compute[0] === '/') {
                             result /= +values[0];
@@ -233,7 +233,7 @@ class App extends React.Component {
                             result += -values[0];
                         } else if (compute[0] === '-') {
                             result -= -values[0];
-                        } else if (compute[0] === '*') {
+                        } else if (compute[0] === '×') {
                             result *= -values[0];
                         } else if (compute[0] === '/') {
                             result /= -values[0];
