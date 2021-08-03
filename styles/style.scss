@@ -4,7 +4,7 @@
 }
 
 // Calculator Components
-$CALC_COMPONENTS: ('zero': 'num', 'one': 'num', 'two': 'num', 'three': 'num', 'four': 'num', 'five': 'num', 'six': 'num', 'seven': 'num', 'eight': 'num', 'nine': 'num', 'decimal': 'num', 'add': 'operator', 'subtract': 'operator', 'multiply': 'operator', 'divide': 'operator', 'equals': 'equals', 'clear': 'AC', 'display': 'display');
+$CALC_COMPONENTS: ('zero': 'num', 'one': 'num', 'two': 'num', 'three': 'num', 'four': 'num', 'five': 'num', 'six': 'num', 'seven': 'num', 'eight': 'num', 'nine': 'num', 'decimal': 'num', 'add': 'operator', 'subtract': 'operator', 'multiply': 'operator', 'divide': 'operator', 'equals': 'equals', 'clear': 'AC', 'display': 'display', 'formula': 'formula');
 
 
 
@@ -24,6 +24,7 @@ body {
         width: 300px;
         display: grid;
         grid-template-areas:
+            "formula formula formula formula"
             "display display display display"
             "clear clear divide multiply"
             "seven eight nine subtract"
@@ -31,7 +32,7 @@ body {
             "one two three equals"
             "zero zero decimal equals";
         grid-template-columns: repeat(4, 25%);
-        grid-template-rows: auto repeat(5, 60px);
+        grid-template-rows: auto auto repeat(5, 60px);
     }
 
     @each $key, $type in $CALC_COMPONENTS {
@@ -56,7 +57,7 @@ body {
             }
         }
         ##{$key}:hover {
-            @if $type != display {
+            @if $type != display and $type != formula {
                 color: black;
                 border: 1px solid #808080;
                 margin: 0;
@@ -77,27 +78,18 @@ body {
         }
     }
 
-    #display {
+    #display, #formula {
         font-family: "Calculator", sans-serif;
         font-size: 28px;
         text-align: right !important;
-
-        p {
-            margin: 0;
-        }
-
-        #user-input {
-            min-height: 30px;
-        }
-
-        #prev-input {
-            font-size: 20px;
-            color: orange;
-            word-break: break-all;
-            min-height: 30px;
-        }
-        
+        min-height: 30px;
+        margin: 1px;   
     }
     
+    #formula {
+        font-size: 20px;
+        color: orange;
+        word-break: break-all;
+    }
 }
 

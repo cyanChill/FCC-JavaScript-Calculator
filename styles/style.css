@@ -27,15 +27,15 @@ body #project-container {
   width: 300px;
   display: -ms-grid;
   display: grid;
-      grid-template-areas: "display display display display" "clear clear divide multiply" "seven eight nine subtract" "four five six add" "one two three equals" "zero zero decimal equals";
+      grid-template-areas: "formula formula formula formula" "display display display display" "clear clear divide multiply" "seven eight nine subtract" "four five six add" "one two three equals" "zero zero decimal equals";
   -ms-grid-columns: (25%)[4];
       grid-template-columns: repeat(4, 25%);
-  -ms-grid-rows: auto (60px)[5];
-      grid-template-rows: auto repeat(5, 60px);
+  -ms-grid-rows: auto auto (60px)[5];
+      grid-template-rows: auto auto repeat(5, 60px);
 }
 
 body #zero {
-  -ms-grid-row: 6;
+  -ms-grid-row: 7;
   -ms-grid-column: 1;
   -ms-grid-column-span: 2;
   grid-area: zero;
@@ -54,7 +54,7 @@ body #zero:hover {
 }
 
 body #one {
-  -ms-grid-row: 5;
+  -ms-grid-row: 6;
   -ms-grid-column: 1;
   grid-area: one;
   text-align: center;
@@ -72,7 +72,7 @@ body #one:hover {
 }
 
 body #two {
-  -ms-grid-row: 5;
+  -ms-grid-row: 6;
   -ms-grid-column: 2;
   grid-area: two;
   text-align: center;
@@ -90,7 +90,7 @@ body #two:hover {
 }
 
 body #three {
-  -ms-grid-row: 5;
+  -ms-grid-row: 6;
   -ms-grid-column: 3;
   grid-area: three;
   text-align: center;
@@ -108,7 +108,7 @@ body #three:hover {
 }
 
 body #four {
-  -ms-grid-row: 4;
+  -ms-grid-row: 5;
   -ms-grid-column: 1;
   grid-area: four;
   text-align: center;
@@ -126,7 +126,7 @@ body #four:hover {
 }
 
 body #five {
-  -ms-grid-row: 4;
+  -ms-grid-row: 5;
   -ms-grid-column: 2;
   grid-area: five;
   text-align: center;
@@ -144,7 +144,7 @@ body #five:hover {
 }
 
 body #six {
-  -ms-grid-row: 4;
+  -ms-grid-row: 5;
   -ms-grid-column: 3;
   grid-area: six;
   text-align: center;
@@ -162,7 +162,7 @@ body #six:hover {
 }
 
 body #seven {
-  -ms-grid-row: 3;
+  -ms-grid-row: 4;
   -ms-grid-column: 1;
   grid-area: seven;
   text-align: center;
@@ -180,7 +180,7 @@ body #seven:hover {
 }
 
 body #eight {
-  -ms-grid-row: 3;
+  -ms-grid-row: 4;
   -ms-grid-column: 2;
   grid-area: eight;
   text-align: center;
@@ -198,7 +198,7 @@ body #eight:hover {
 }
 
 body #nine {
-  -ms-grid-row: 3;
+  -ms-grid-row: 4;
   -ms-grid-column: 3;
   grid-area: nine;
   text-align: center;
@@ -216,7 +216,7 @@ body #nine:hover {
 }
 
 body #decimal {
-  -ms-grid-row: 6;
+  -ms-grid-row: 7;
   -ms-grid-column: 3;
   grid-area: decimal;
   text-align: center;
@@ -234,7 +234,7 @@ body #decimal:hover {
 }
 
 body #add {
-  -ms-grid-row: 4;
+  -ms-grid-row: 5;
   -ms-grid-column: 4;
   grid-area: add;
   text-align: center;
@@ -252,7 +252,7 @@ body #add:hover {
 }
 
 body #subtract {
-  -ms-grid-row: 3;
+  -ms-grid-row: 4;
   -ms-grid-column: 4;
   grid-area: subtract;
   text-align: center;
@@ -270,7 +270,7 @@ body #subtract:hover {
 }
 
 body #multiply {
-  -ms-grid-row: 2;
+  -ms-grid-row: 3;
   -ms-grid-column: 4;
   grid-area: multiply;
   text-align: center;
@@ -288,7 +288,7 @@ body #multiply:hover {
 }
 
 body #divide {
-  -ms-grid-row: 2;
+  -ms-grid-row: 3;
   -ms-grid-column: 3;
   grid-area: divide;
   text-align: center;
@@ -306,7 +306,7 @@ body #divide:hover {
 }
 
 body #equals {
-  -ms-grid-row: 5;
+  -ms-grid-row: 6;
   -ms-grid-row-span: 2;
   -ms-grid-column: 4;
   grid-area: equals;
@@ -325,7 +325,7 @@ body #equals:hover {
 }
 
 body #clear {
-  -ms-grid-row: 2;
+  -ms-grid-row: 3;
   -ms-grid-column: 1;
   -ms-grid-column-span: 2;
   grid-area: clear;
@@ -344,7 +344,7 @@ body #clear:hover {
 }
 
 body #display {
-  -ms-grid-row: 1;
+  -ms-grid-row: 2;
   -ms-grid-column: 1;
   -ms-grid-column-span: 4;
   grid-area: display;
@@ -354,24 +354,28 @@ body #display {
   margin: 1px;
 }
 
-body #display {
+body #formula {
+  -ms-grid-row: 1;
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 4;
+  grid-area: formula;
+  text-align: center;
+  color: white;
+  border: none;
+  margin: 1px;
+}
+
+body #display, body #formula {
   font-family: "Calculator", sans-serif;
   font-size: 28px;
   text-align: right !important;
-}
-
-body #display p {
-  margin: 0;
-}
-
-body #display #user-input {
   min-height: 30px;
+  margin: 1px;
 }
 
-body #display #prev-input {
+body #formula {
   font-size: 20px;
   color: orange;
   word-break: break-all;
-  min-height: 30px;
 }
 /*# sourceMappingURL=style.css.map */
