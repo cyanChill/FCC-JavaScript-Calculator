@@ -94,3 +94,12 @@ body {
     }
 }
 
+
+@media (max-width: 350px) {
+    body {
+        #project-container {
+            width: 80vw;
+            grid-template-rows: auto auto repeat(5, 20vw);
+        }
+    }
+}

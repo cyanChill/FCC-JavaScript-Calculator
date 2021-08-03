@@ -379,4 +379,12 @@ body #formula {
   color: orange;
   word-break: break-all;
 }
+
+@media (max-width: 350px) {
+  body #project-container {
+    width: 80vw;
+    -ms-grid-rows: auto auto (20vw)[5];
+        grid-template-rows: auto auto repeat(5, 20vw);
+  }
+}
 /*# sourceMappingURL=style.css.map */
