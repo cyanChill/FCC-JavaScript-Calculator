@@ -17,6 +17,7 @@ body {
       -ms-flex-align: center;
           align-items: center;
   height: 95vh;
+  background-color: beige;
 }
 
 body #project-container {
