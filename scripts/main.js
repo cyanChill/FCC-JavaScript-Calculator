@@ -155,16 +155,17 @@ class App extends React.Component {
 
             // Check if input length is at most 22 characters long or input is invalid
             if (newCurrVal.length > 22 || invalid) {
+                const lengthCheck = newCurrVal.length > 22;
                 newFormula = formula;
                 newCurrVal = currVal;
                 
-                if (newCurrVal.length > 22) {
+                if (lengthCheck) {
                     $('#display').text('DIGIT LIMIT MET');
                     $('.num').attr('disabled');
                     setTimeout(() => {
                         $('#display').text(this.state.currVal);
                         $('.num').removeAttr('disabled');
-                    }, 1000);
+                    }, 1250);
                 }
             }
             
