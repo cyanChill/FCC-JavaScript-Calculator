@@ -65,6 +65,12 @@ const CALC_COMPONENTS = {
     },
 };
 
+
+function isOperator(char) {
+    return char === '+' || char === '-' || char === '/' || char === '×';
+}
+
+
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -78,15 +84,6 @@ class App extends React.Component {
         this.handleAction = this.handleAction.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
-    /* 
-        - Limit user-input to 22 numbers/operators ✔️
-        - Need click events for each button ✔️
-        - Make sure we can't repeat decimals (or a check for updating input)
-        - If we click an operator after another operator, we use the latest operator (excluding minus symbol because of negatives)
-            - We can have (operator) (minus)
-            - We can have (minus) (minus)
-            - If we do (minus) (minus) (times), this turns to (times) for example [eliminate the minus]
-    */
 
     // Handle the click events
     handleAction(event) {
@@ -100,6 +97,8 @@ class App extends React.Component {
                 prevEntry: '',
                 hasDecimal: false,
             });
+            $('#user-input').text('0');
+            $('#prev-input').text('');
         } else {
             let invalid = false;
             const currIn = CALC_COMPONENTS[action];
@@ -119,7 +118,7 @@ class App extends React.Component {
 
                 // If input is subtraction
                 if (currIn.display === '-') {
-                    if (prevEntry.display === '-' && (twoBefore === '-' || twoBefore === '+' || twoBefore === '/' || twoBefore === '×')) {
+                    if (prevEntry.display === '-' && isOperator(twoBefore)) {
                         newTotalVal = totalVal;
                     }
                     if (totalVal.length === 1 && prevEntry.display === '-') {
@@ -131,7 +130,7 @@ class App extends React.Component {
                     // 2 operators in a row
                     if (prevEntry.type === 'operator') {
                         // Special case if we already have 2 operators before our current operator input
-                        if (twoBefore === '-' || twoBefore === '+' || twoBefore === '/' || twoBefore === '×') {
+                        if (isOperator(twoBefore)) {
                             prvIdx -= 1
                         }
                         newTotalVal = totalVal.substr(0, prvIdx) + currIn.display;
@@ -158,12 +157,15 @@ class App extends React.Component {
             if (newCurrVal.length > 22 || invalid) {
                 newTotalVal = totalVal;
                 newCurrVal = currVal;
-                $('#user-input').text('DIGIT LIMIT MET');
-                $('.num').attr('disabled');
-                setTimeout(() => {
-                    $('#user-input').text(this.state.currVal);
-                    $('.num').removeAttr('disabled');
-                }, 1000);
+                
+                if (newCurrVal.length > 22) {
+                    $('#user-input').text('DIGIT LIMIT MET');
+                    $('.num').attr('disabled');
+                    setTimeout(() => {
+                        $('#user-input').text(this.state.currVal);
+                        $('.num').removeAttr('disabled');
+                    }, 1000);
+                }
             }
             
             this.setState({
@@ -174,16 +176,95 @@ class App extends React.Component {
         }
     }
 
+    /* 
+        Need to modify handleAction to take into account of the previous results if there's any
+    */
+
 
     // Handle final calculations
     handleSubmit() {
-        console.log("Doing calculations");
-        const regex = /[+\-\/×]/;
-        console.log(this.state.totalVal.split(regex))
-        // Find index where the string is
-        // Check following 2 inputs (see for symbols)
-        console.log(0.5 + +"0.5")
-        
+        let compute = this.state.totalVal.replace(/×/g, '*');
+        let result = '';
+        let beforeResult = '';
+        // No input, only 1 or 2 operators as input
+        if (compute.length == 0 || isOperator(compute) || (compute.length == 2 && isOperator(compute[0]) && isOperator(compute[1]))) {
+            result = 'NaN';
+        // Ends with an operator or we're computing with 'NaN'
+        } else if (compute.indexOf('NaN') !== -1 || isOperator(compute[compute.length - 1])) {
+            result = 'NaN';
+        // Guarenteed to not end with an operator
+        } else {
+            let values;
+            const prevComputed = this.state.prevComputed.toString();
+            if (compute.indexOf('e') == -1) {
+                values = compute.split(/[+\-\/*]/);
+            } else {
+                compute = compute.substring(compute.indexOf(prevComputed) + prevComputed.length);
+                values = compute.split(/[+\-\/*]/);
+                values.unshift(prevComputed);
+            }
+
+            console.log("Values:")
+            console.log(values)
+            console.log(compute)
+
+            // Starts with a '*' or '/'
+            if (values[0] === '' && compute[0] !== '+' && compute[0] !== '-') {
+                result = 'NaN';
+            } else {
+                beforeResult = this.state.totalVal;
+                if (values[0].indexOf('e') !== -1) {
+                    compute = prevComputed + compute;
+                }
+
+                result = values[0] === '' ? 0 : +values[0];
+                compute = compute.substring(compute.indexOf(values[0]) + values[0].length);
+                values.shift();
+
+                console.log(`values:`)
+                console.log(values)
+                console.log(`compute:`)
+                console.log(compute)
+
+                while (values.length > 0) {
+                    // Only 1 operator before start of next number
+                    if (compute.indexOf(values[0]) == 1) {
+                        if (compute[0] === '+') {
+                            result += +values[0];
+                        } else if (compute[0] === '-') {
+                            result -= +values[0];
+                        } else if (compute[0] === '*') {
+                            result *= +values[0];
+                        } else if (compute[0] === '/') {
+                            result /= +values[0];
+                        }
+                    // 2 operators before start of next number
+                    } else if (compute.indexOf(values[0]) == 2) {
+                        if (compute[0] === '+') {
+                            result += -values[0];
+                        } else if (compute[0] === '-') {
+                            result -= -values[0];
+                        } else if (compute[0] === '*') {
+                            result *= -values[0];
+                        } else if (compute[0] === '/') {
+                            result /= -values[0];
+                        }
+                    }
+
+                    compute = compute.substring(compute.indexOf(values[0]) + values[0].length);
+                    values.shift();
+                }
+            }
+        }
+
+        this.setState({
+            totalVal: result,
+            prevComputed: result,
+        });
+
+        $('#user-input').text(result);
+        $('#prev-input').text(beforeResult + `=${result}`);
+
     }
 
 
