@@ -75,7 +75,7 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            totalVal: '',
+            formula: '',
             currVal: '0',
             prevComputed: '',
             prevEntry: '',
@@ -91,7 +91,7 @@ class App extends React.Component {
 
         if (action === 'clear') {
             this.setState({
-                totalVal: '',
+                formula: '',
                 currVal: '0',
                 prevComputed: '',
                 prevEntry: '',
@@ -102,8 +102,8 @@ class App extends React.Component {
         } else {
             let invalid = false;
             const currIn = CALC_COMPONENTS[action];
-            const {totalVal, currVal, prevEntry} = this.state;
-            let newTotalVal = totalVal != '0' ? totalVal + currIn.display : currIn.display;
+            const {formula, currVal, prevEntry} = this.state;
+            let newFormula = formula != '0' ? formula + currIn.display : currIn.display;
             let newCurrVal = currVal != '0' ? currVal + currIn.display : currIn.display;
                 
             // If we follow up on an operator with a number
@@ -113,27 +113,27 @@ class App extends React.Component {
 
             // If input is an operator
             if (currIn.type === 'operator') {
-                let prvIdx = totalVal.length - 1;
-                let twoBefore = totalVal[prvIdx - 1];
+                let prvIdx = formula.length - 1;
+                let twoBefore = formula[prvIdx - 1];
 
                 // If input is subtraction
                 if (currIn.display === '-') {
                     if (prevEntry.display === '-' && isOperator(twoBefore)) {
-                        newTotalVal = totalVal;
+                        newFormula = formula;
                     }
-                    if (totalVal.length === 1 && prevEntry.display === '-') {
-                        newTotalVal = '-';
+                    if (formula.length === 1 && prevEntry.display === '-') {
+                        newFormula = '-';
                     }
                     newCurrVal = '-';
                 // If input ins't subtraction
-                } else if (newTotalVal.length > 1) {
+                } else if (newFormula.length > 1) {
                     // 2 operators in a row
                     if (prevEntry.type === 'operator') {
                         // Special case if we already have 2 operators before our current operator input
                         if (isOperator(twoBefore)) {
                             prvIdx -= 1
                         }
-                        newTotalVal = totalVal.substr(0, prvIdx) + currIn.display;
+                        newFormula = formula.substr(0, prvIdx) + currIn.display;
                     }
                     newCurrVal = currIn.display;
                 }
@@ -146,7 +146,7 @@ class App extends React.Component {
                     invalid = true;
                 } else {
                     if (prevEntry.type === 'operator' || currVal === '0') {
-                        newTotalVal = totalVal === '' ? '0.' : currVal === '0' ? totalVal + '.' : totalVal + '0.';
+                        newFormula = formula === '' ? '0.' : currVal === '0' ? formula + '.' : formula + '0.';
                         newCurrVal = '0.';
                     }
                     this.setState({ hasDecimal: true });
@@ -155,7 +155,7 @@ class App extends React.Component {
 
             // Check if input length is at most 22 characters long or input is invalid
             if (newCurrVal.length > 22 || invalid) {
-                newTotalVal = totalVal;
+                newFormula = formula;
                 newCurrVal = currVal;
                 
                 if (newCurrVal.length > 22) {
@@ -169,7 +169,7 @@ class App extends React.Component {
             }
             
             this.setState({
-                totalVal: newTotalVal,
+                formula: newFormula,
                 currVal: newCurrVal,
                 prevEntry: currIn,
             });
@@ -179,7 +179,7 @@ class App extends React.Component {
 
     // Handle final calculations
     handleSubmit() {
-        let compute = this.state.totalVal.replace(/×/g, '*');
+        let compute = this.state.formula.replace(/×/g, '*');
         let result = '';
         let beforeResult = '';
         // No input, only 1 or 2 operators as input
@@ -205,7 +205,7 @@ class App extends React.Component {
             if (values[0] === '' && compute[0] !== '+' && compute[0] !== '-') {
                 result = 'NaN';
             } else {
-                beforeResult = this.state.totalVal;
+                beforeResult = this.state.formula;
                 if (values[0].indexOf('e') !== -1) {
                     compute = prevComputed + compute;
                 }
@@ -246,7 +246,7 @@ class App extends React.Component {
         }
 
         this.setState({
-            totalVal: result,
+            formula: result,
             prevComputed: result,
             currVal: '',
         }, () => {
@@ -255,7 +255,7 @@ class App extends React.Component {
         });
     }
 
-    
+
     render() {
         const COMPONENTS = Object.entries(CALC_COMPONENTS).map((e) => {
             return <button id={e[0]} key={e[0]} onClick={this.handleAction} className={e[1].type}>{e[1].display}</button>
@@ -263,7 +263,7 @@ class App extends React.Component {
 
         return (
             <div id="project-container">
-                <div id="formula">{this.state.totalVal}</div>
+                <div id="formula">{this.state.formula}</div>
                 <div id="display">{this.state.currVal}</div>
                 {COMPONENTS}
                 <button id="equals" onClick={this.handleSubmit}>=</button>
