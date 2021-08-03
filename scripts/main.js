@@ -97,8 +97,8 @@ class App extends React.Component {
                 prevEntry: '',
                 hasDecimal: false,
             });
-            $('#user-input').text('0');
-            $('#prev-input').text('');
+            $('#display').text('0');
+            $('#formula').text('');
         } else {
             let invalid = false;
             const currIn = CALC_COMPONENTS[action];
@@ -159,10 +159,10 @@ class App extends React.Component {
                 newCurrVal = currVal;
                 
                 if (newCurrVal.length > 22) {
-                    $('#user-input').text('DIGIT LIMIT MET');
+                    $('#display').text('DIGIT LIMIT MET');
                     $('.num').attr('disabled');
                     setTimeout(() => {
-                        $('#user-input').text(this.state.currVal);
+                        $('#display').text(this.state.currVal);
                         $('.num').removeAttr('disabled');
                     }, 1000);
                 }
@@ -250,13 +250,12 @@ class App extends React.Component {
             prevComputed: result,
             currVal: '',
         }, () => {
-            $('#user-input').text(result);
-            $('#prev-input').text(beforeResult + `=${result}`);
+            $('#display').text(result);
+            $('#formula').text(beforeResult + `=${result}`);
         });
     }
 
-
-
+    
     render() {
         const COMPONENTS = Object.entries(CALC_COMPONENTS).map((e) => {
             return <button id={e[0]} key={e[0]} onClick={this.handleAction} className={e[1].type}>{e[1].display}</button>
@@ -264,10 +263,8 @@ class App extends React.Component {
 
         return (
             <div id="project-container">
-                <div id="display">
-                    <p id="prev-input">{this.state.totalVal}</p>
-                    <p id="user-input">{this.state.currVal}</p>
-                </div>
+                <div id="formula">{this.state.totalVal}</div>
+                <div id="display">{this.state.currVal}</div>
                 {COMPONENTS}
                 <button id="equals" onClick={this.handleSubmit}>=</button>
             </div>
