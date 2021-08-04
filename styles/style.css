@@ -365,7 +365,7 @@ body #display, body #formula {
   font-family: 'Orbitron', sans-serif;
   font-size: 20px;
   text-align: right !important;
-  margin: 1px;
+  margin: 2px;
 }
 
 body #formula {
