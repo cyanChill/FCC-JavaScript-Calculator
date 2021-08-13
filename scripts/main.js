@@ -18,6 +18,14 @@ const digitButtonMap = {
   decimal: [0],
 };
 
+let prevComputed = "";
+let currVal = "0";
+
+function initialization() {
+  createDigitBtns();
+  updateDisplay();
+}
+
 function createDigitBtns() {
   for (key in digitButtonMap) {
     const referenceNode = document.querySelector(`#${key}`);
@@ -28,21 +36,36 @@ function createDigitBtns() {
       /* 
         Add number button event listeners here
       */
+      numBtn.addEventListener("click", addDigit);
       calculator.insertBefore(numBtn, referenceNode);
     });
   }
 }
 
 function updateDisplay() {
+  currVal = `${currVal}`;
+  display.querySelector("#prevCalc").innerText = prevComputed;
+  display.querySelector("#currCalc").innerText = currVal;
   // Do something
 }
 
+function addDigit(e) {
+  if (currVal === "0") currVal = e.target.innerText;
+  else currVal = +currVal * 10 + +e.target.innerText;
+  if (`${currVal}`.length > 14) currVal = currVal.toExponential(2);
+  updateDisplay();
+}
+
 clear.addEventListener("click", () => {
-  // Do something
+  prevComputed = "";
+  currVal = "0";
+  updateDisplay();
 });
 
 deleteBtn.addEventListener("click", () => {
-  // Do something
+  if (currVal.length === 1) currVal = "0";
+  else currVal = currVal.slice(0, -1);
+  updateDisplay();
 });
 
 divide.addEventListener("click", () => {
@@ -78,4 +101,4 @@ equals.addEventListener("click", () => {
 */
 
 /* Initialization */
-createDigitBtns();
+initialization();
