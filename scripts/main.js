@@ -82,7 +82,7 @@ function addDigit(digit) {
   else if (!currNum.includes("e")) currNum = `${currNum + digit}`;
   else {
     let [val, exp] = currNum.split("e");
-    if (exponent < 0)
+    if (exp < 0)
       currNum = `${
         (+currNum * (10 ** (-exp + 1) + +digit)) / 10 ** (-exp + 1)
       }`;
@@ -194,7 +194,23 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "+" || e.key === "-") operatorActionFunc(e.key);
   if (e.key === "*") operatorActionFunc("×");
   if (e.key === "/") operatorActionFunc("÷");
+  findFocus(e.key);
 });
+
+function findFocus(innerText) {
+  let btns = [...document.querySelectorAll("button")];
+  for (let i = 0; i < btns.length; i++) {
+    let btnVal = btns[i].innerHTML;
+    if (btnVal === `<i class="fas fa-backspace"></i>`) btnVal = "Backspace";
+    if (btnVal === "×") btnVal = "*";
+    if (btnVal === "÷") btnVal = "/";
+    if (innerText === "Enter") innerText = "=";
+    if (btnVal === innerText) {
+      btns[i].focus();
+      break;
+    }
+  }
+}
 
 /* Initialization */
 initialization();
