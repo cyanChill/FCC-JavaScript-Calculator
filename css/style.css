@@ -7,10 +7,11 @@
 }
 
 body {
-  height: 100vh;
+  min-height: 100vh;
   margin: 0;
   padding: 0;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   font-family: "Nunito", sans-serif;
@@ -60,6 +61,7 @@ body {
   justify-content: flex-end;
   background: #f4f4f4;
   text-align: right;
+  border-radius: 0.5em;
   padding: 0.5em;
   margin: 0.5em 0;
 }
@@ -109,4 +111,11 @@ body {
 #equals:hover,
 #equals:focus {
   background: rgb(255, 220, 175);
+}
+
+#note {
+  width: 16em;
+  line-height: 1.4;
+  text-align: center;
+  color: rgb(252, 56, 56);
 }
