@@ -77,9 +77,12 @@ function updateDisplay() {
 }
 
 function addDigit(e) {
+  currNum = `${currNum}`;
   if (currNum === "0") currNum = e.target.innerText;
-  else currNum = +currNum * 10 + +e.target.innerText;
-  if (`${currNum}`.length > 14) currNum = currNum.toExponential(2);
+  else if (currNum.includes(".") && !currNum.includes("e"))
+    currNum = `${currNum + e.target.innerText}`;
+  else currNum = `${+currNum * 10 + +e.target.innerText}`;
+  if (currNum.length > 14) currNum = (+currNum).toExponential(2);
   updateDisplay();
 }
 
@@ -145,7 +148,9 @@ deleteBtn.addEventListener("click", () => {
 });
 
 decimal.addEventListener("click", () => {
-  // Do something
+  currNum = `${currNum}`;
+  if (!currNum.includes(".")) currNum += ".";
+  updateDisplay();
 });
 
 plusminus.addEventListener("click", () => {
