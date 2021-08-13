@@ -108,22 +108,24 @@ function multiply(num1, num2) {
 function divide(num1, num2) {
   if (+num2 === 0) {
     alert("Error: Can't divide by 0.");
-    return NaN;
+    return false;
   }
   return +num1 / +num2;
 }
 
 function operate(num1, operand, num2) {
-  if (num2 === "") return;
+  if (num2 === "") return false;
   let newPrevNum = 0;
   if (num1 === "") num1 = "0";
   if (operand === "÷") newPrevNum = divide(num1, num2);
   else if (operand === "×") newPrevNum = multiply(num1, num2);
   else if (operand === "-") newPrevNum = subtract(num1, num2);
   else newPrevNum = add(num1, num2); // Default case (addition)
+  if (newPrevNum === false) return false;
   if (`${newPrevNum}`.length > 14) newPrevNum = newPrevNum.toExponential(5);
   prevNum = newPrevNum;
   currNum = "";
+  return true;
 }
 
 function continueCalculation() {
@@ -176,8 +178,9 @@ equals.addEventListener("click", equalsEvent);
 
 function equalsEvent() {
   if (prevNum === "" || currNum === "") return;
-  preCalcVal = `${prevNum} ${operator} ${currNum}`;
-  operate(prevNum, operator, currNum);
+  let calculationDisplay = `${prevNum} ${operator} ${currNum}`;
+  if (!operate(prevNum, operator, currNum)) return;
+  preCalcVal = calculationDisplay;
   currNum = prevNum;
   prevNum = "";
   updateDisplay();
