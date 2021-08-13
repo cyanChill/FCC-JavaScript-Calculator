@@ -19,6 +19,7 @@ const digitButtonMap = {
 };
 
 let prevComputed = "";
+let preCalcVal = "";
 let operator = "";
 let currVal = "0";
 
@@ -44,10 +45,10 @@ function createDigitBtns() {
 }
 
 function updateDisplay() {
-  currVal = `${currVal}`;
-  display.querySelector("#prevCalc").innerText = prevComputed + operator;
+  const prevCalc = display.querySelector("#prevCalc");
+  if (preCalcVal) prevCalc.innerText = preCalcVal + "=";
+  else prevCalc.innerText = prevComputed + operator;
   display.querySelector("#currCalc").innerText = currVal;
-  // Do something
 }
 
 function addDigit(e) {
@@ -63,41 +64,63 @@ function calculate() {
   else if (operator === "×") prevComputed = +prevComputed * +currVal;
   else if (operator === "-") prevComputed = +prevComputed - +currVal;
   else prevComputed = +prevComputed + +currVal; // Default case (addition)
+  if (`${prevComputed}`.length > 14)
+    prevComputed = prevComputed.toExponential(5);
   currVal = "";
+}
+
+function continueCalculation() {
+  if (preCalcVal) {
+    prevComputed = currVal;
+    operator = "+";
+    preCalcVal = "";
+    currVal = "";
+  }
 }
 
 clear.addEventListener("click", () => {
   prevComputed = "";
+  preCalcVal = "";
   operator = "";
   currVal = "0";
   updateDisplay();
 });
 
 deleteBtn.addEventListener("click", () => {
+  currVal = `${currVal}`;
   if (currVal.length === 1) currVal = "0";
   else currVal = currVal.slice(0, -1);
+  if (preCalcVal) {
+    preCalcVal = "";
+    operator = "";
+    prevComputed = "";
+  }
   updateDisplay();
 });
 
 divide.addEventListener("click", () => {
+  continueCalculation();
   calculate();
   operator = "÷";
   updateDisplay();
 });
 
 multiply.addEventListener("click", () => {
+  continueCalculation();
   calculate();
   operator = "×";
   updateDisplay();
 });
 
 subtract.addEventListener("click", () => {
+  continueCalculation();
   calculate();
   operator = "-";
   updateDisplay();
 });
 
 add.addEventListener("click", () => {
+  continueCalculation();
   calculate();
   operator = "+";
   updateDisplay();
@@ -112,7 +135,12 @@ plusminus.addEventListener("click", () => {
 });
 
 equals.addEventListener("click", () => {
-  // Do something
+  if (prevComputed === "") return;
+  preCalcVal = `${prevComputed} ${operator} ${currVal}`;
+  calculate();
+  currVal = prevComputed;
+  prevComputed = "";
+  updateDisplay();
 });
 
 /* 
