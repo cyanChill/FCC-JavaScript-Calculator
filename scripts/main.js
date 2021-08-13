@@ -19,6 +19,7 @@ const digitButtonMap = {
 };
 
 let prevComputed = "";
+let operator = "";
 let currVal = "0";
 
 function initialization() {
@@ -44,7 +45,7 @@ function createDigitBtns() {
 
 function updateDisplay() {
   currVal = `${currVal}`;
-  display.querySelector("#prevCalc").innerText = prevComputed;
+  display.querySelector("#prevCalc").innerText = prevComputed + operator;
   display.querySelector("#currCalc").innerText = currVal;
   // Do something
 }
@@ -56,8 +57,18 @@ function addDigit(e) {
   updateDisplay();
 }
 
+function calculate() {
+  if (prevComputed === "") prevComputed = "0";
+  if (operator === "÷") prevComputed = +prevComputed / +currVal;
+  else if (operator === "×") prevComputed = +prevComputed * +currVal;
+  else if (operator === "-") prevComputed = +prevComputed - +currVal;
+  else prevComputed = +prevComputed + +currVal; // Default case (addition)
+  currVal = "";
+}
+
 clear.addEventListener("click", () => {
   prevComputed = "";
+  operator = "";
   currVal = "0";
   updateDisplay();
 });
@@ -69,19 +80,27 @@ deleteBtn.addEventListener("click", () => {
 });
 
 divide.addEventListener("click", () => {
-  // Do something
+  calculate();
+  operator = "÷";
+  updateDisplay();
 });
 
 multiply.addEventListener("click", () => {
-  // Do something
+  calculate();
+  operator = "×";
+  updateDisplay();
 });
 
 subtract.addEventListener("click", () => {
-  // Do something
+  calculate();
+  operator = "-";
+  updateDisplay();
 });
 
 add.addEventListener("click", () => {
-  // Do something
+  calculate();
+  operator = "+";
+  updateDisplay();
 });
 
 decimal.addEventListener("click", () => {
