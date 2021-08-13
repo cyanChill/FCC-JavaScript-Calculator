@@ -2,10 +2,10 @@ const calculator = document.querySelector("#calculator");
 const display = document.querySelector("#display");
 const clear = document.querySelector("#clear");
 const deleteBtn = document.querySelector("#delete");
-const divide = document.querySelector("#divide");
-const multiply = document.querySelector("#multiply");
-const subtract = document.querySelector("#subtract");
-const add = document.querySelector("#add");
+const divideBtn = document.querySelector("#divide");
+const multiplyBtn = document.querySelector("#multiply");
+const subtractBtn = document.querySelector("#subtract");
+const addBtn = document.querySelector("#add");
 const decimal = document.querySelector("#decimal");
 const plusMinus = document.querySelector("#plusminus");
 const equals = document.querySelector("#equals");
@@ -18,10 +18,10 @@ const digitButtonMap = {
   decimal: [0],
 };
 
-let prevComputed = "";
+let prevNum = "";
 let preCalcVal = "";
 let operator = "";
-let currVal = "0";
+let currNum = "0";
 
 function initialization() {
   createDigitBtns();
@@ -47,81 +47,102 @@ function createDigitBtns() {
 function updateDisplay() {
   const prevCalc = display.querySelector("#prevCalc");
   if (preCalcVal) prevCalc.innerText = preCalcVal + "=";
-  else prevCalc.innerText = prevComputed + operator;
-  display.querySelector("#currCalc").innerText = currVal;
+  else prevCalc.innerText = prevNum + operator;
+  display.querySelector("#currCalc").innerText = currNum;
 }
 
 function addDigit(e) {
-  if (currVal === "0") currVal = e.target.innerText;
-  else currVal = +currVal * 10 + +e.target.innerText;
-  if (`${currVal}`.length > 14) currVal = currVal.toExponential(2);
+  if (currNum === "0") currNum = e.target.innerText;
+  else currNum = +currNum * 10 + +e.target.innerText;
+  if (`${currNum}`.length > 14) currNum = currNum.toExponential(2);
   updateDisplay();
 }
 
-function calculate() {
-  if (prevComputed === "") prevComputed = "0";
-  if (operator === "÷") prevComputed = +prevComputed / +currVal;
-  else if (operator === "×") prevComputed = +prevComputed * +currVal;
-  else if (operator === "-") prevComputed = +prevComputed - +currVal;
-  else prevComputed = +prevComputed + +currVal; // Default case (addition)
-  if (`${prevComputed}`.length > 14)
-    prevComputed = prevComputed.toExponential(5);
-  currVal = "";
+function add(num1, num2) {
+  return +num1 + +num2;
+}
+
+function subtract(num1, num2) {
+  return +num1 - +num2;
+}
+
+function multiply(num1, num2) {
+  return +num1 * +num2;
+}
+
+function divide(num1, num2) {
+  if (+num2 === 0) {
+    alert("Error: Can't divide by 0.");
+    return NaN;
+  }
+  return +num1 / +num2;
+}
+
+function operate(num1, operand, num2) {
+  let newPrevNum = 0;
+  if (num1 === "") num1 = "0";
+  if (operand === "÷") newPrevNum = divide(num1, num2);
+  else if (operand === "×") newPrevNum = multiply(num1, num2);
+  else if (operand === "-") newPrevNum = subtract(num1, num2);
+  else newPrevNum = add(num1, num2); // Default case (addition)
+  if (`${newPrevNum}`.length > 14) newPrevNum = newPrevNum.toExponential(5);
+  prevNum = newPrevNum;
+  currNum = "";
 }
 
 function continueCalculation() {
   if (preCalcVal) {
-    prevComputed = currVal;
-    operator = "+";
+    prevNum = currNum;
+    operator = "+"; // "reset" operator as prev operator will still be used
     preCalcVal = "";
-    currVal = "";
+    currNum = "";
   }
 }
 
 clear.addEventListener("click", () => {
-  prevComputed = "";
+  prevNum = "";
   preCalcVal = "";
   operator = "";
-  currVal = "0";
+  currNum = "0";
   updateDisplay();
 });
 
 deleteBtn.addEventListener("click", () => {
-  currVal = `${currVal}`;
-  if (currVal.length === 1) currVal = "0";
-  else currVal = currVal.slice(0, -1);
+  currNum = `${currNum}`;
+  if (currNum.length === 1) currNum = "0";
+  else currNum = currNum.slice(0, -1);
   if (preCalcVal) {
     preCalcVal = "";
     operator = "";
-    prevComputed = "";
+    prevNum = "";
   }
   updateDisplay();
 });
 
-divide.addEventListener("click", () => {
+divideBtn.addEventListener("click", () => {
   continueCalculation();
-  calculate();
+  operate(prevNum, operator, currNum);
   operator = "÷";
   updateDisplay();
 });
 
-multiply.addEventListener("click", () => {
+multiplyBtn.addEventListener("click", () => {
   continueCalculation();
-  calculate();
+  operate(prevNum, operator, currNum);
   operator = "×";
   updateDisplay();
 });
 
-subtract.addEventListener("click", () => {
+subtractBtn.addEventListener("click", () => {
   continueCalculation();
-  calculate();
+  operate(prevNum, operator, currNum);
   operator = "-";
   updateDisplay();
 });
 
-add.addEventListener("click", () => {
+addBtn.addEventListener("click", () => {
   continueCalculation();
-  calculate();
+  operate(prevNum, operator, currNum);
   operator = "+";
   updateDisplay();
 });
@@ -135,11 +156,11 @@ plusminus.addEventListener("click", () => {
 });
 
 equals.addEventListener("click", () => {
-  if (prevComputed === "") return;
-  preCalcVal = `${prevComputed} ${operator} ${currVal}`;
-  calculate();
-  currVal = prevComputed;
-  prevComputed = "";
+  if (prevNum === "") return;
+  preCalcVal = `${prevNum} ${operator} ${currNum}`;
+  operate(prevNum, operator, currNum);
+  currNum = prevNum;
+  prevNum = "";
   updateDisplay();
 });
 
