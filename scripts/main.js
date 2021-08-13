@@ -6,12 +6,6 @@ const decimal = document.querySelector("#decimal");
 const plusMinus = document.querySelector("#plusminus");
 const equals = document.querySelector("#equals");
 
-// Currently Unused:
-const divideBtn = document.querySelector("#divide");
-const multiplyBtn = document.querySelector("#multiply");
-const subtractBtn = document.querySelector("#subtract");
-const addBtn = document.querySelector("#add");
-
 /* Insert the number buttons before the button with the name of the key */
 const digitButtonMap = {
   multiply: [7, 8, 9],
@@ -60,14 +54,17 @@ function createDigitBtns() {
 function addOperatorEvents() {
   for (key in opeartorMap) {
     const referenceNode = document.querySelector(`#${key}`);
-    referenceNode.addEventListener("click", operatorActionFunc);
+    referenceNode.addEventListener("click", (e) => {
+      operand = e.target.innerText;
+      operatorActionFunc(operand);
+    });
   }
 }
 
-function operatorActionFunc(e) {
+function operatorActionFunc(operand) {
   continueCalculation();
   operate(prevNum, operator, currNum);
-  operator = e.target.innerText;
+  operator = operand;
   updateDisplay();
 }
 
@@ -83,7 +80,15 @@ function addDigit(digit) {
   if (currNum === "-0") currNum = "-";
   if (currNum === "0") currNum = digit;
   else if (!currNum.includes("e")) currNum = `${currNum + digit}`;
-  else currNum = `${+currNum * 10 + +digit}`;
+  else {
+    let [val, exp] = currNum.split("e");
+    if (exponent < 0)
+      currNum = `${
+        (+currNum * (10 ** (-exp + 1) + +digit)) / 10 ** (-exp + 1)
+      }`;
+    else currNum = `${+currNum * 10 + +digit}`;
+  }
+
   if (currNum.length > 14) currNum = (+currNum).toExponential(2);
   updateDisplay();
 }
@@ -142,7 +147,7 @@ deleteBtn.addEventListener("click", deleteEvent);
 
 function deleteEvent() {
   currNum = `${currNum}`;
-  if (currNum.length === 1) currNum = "0";
+  if (currNum.length === 1) currNum = "";
   else currNum = currNum.slice(0, -1);
   if (preCalcVal) {
     preCalcVal = "";
@@ -179,11 +184,13 @@ function equalsEvent() {
 }
 
 document.addEventListener("keydown", (e) => {
-  console.log(`Key "${e.key}" input  [event: keydown]`);
   if (+e.key >= 0 && +e.key <= 9) addDigit(e.key);
   if (e.key === "Backspace") deleteEvent();
   if (e.key === ".") decimalEvent();
   if (e.key === "=" || e.key === "Enter") equalsEvent();
+  if (e.key === "+" || e.key === "-") operatorActionFunc(e.key);
+  if (e.key === "*") operatorActionFunc("×");
+  if (e.key === "/") operatorActionFunc("÷");
 });
 
 /* Initialization */
