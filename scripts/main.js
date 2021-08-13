@@ -78,9 +78,9 @@ function updateDisplay() {
 
 function addDigit(e) {
   currNum = `${currNum}`;
+  if (currNum === "-0") currNum = "-";
   if (currNum === "0") currNum = e.target.innerText;
-  else if (currNum.includes(".") && !currNum.includes("e"))
-    currNum = `${currNum + e.target.innerText}`;
+  else if (!currNum.includes("e")) currNum = `${currNum + e.target.innerText}`;
   else currNum = `${+currNum * 10 + +e.target.innerText}`;
   if (currNum.length > 14) currNum = (+currNum).toExponential(2);
   updateDisplay();
@@ -107,6 +107,7 @@ function divide(num1, num2) {
 }
 
 function operate(num1, operand, num2) {
+  if (num2 === "") return;
   let newPrevNum = 0;
   if (num1 === "") num1 = "0";
   if (operand === "÷") newPrevNum = divide(num1, num2);
@@ -154,11 +155,14 @@ decimal.addEventListener("click", () => {
 });
 
 plusminus.addEventListener("click", () => {
-  // Do something
+  if (currNum[0] === "-") currNum = currNum.slice(1);
+  else if (currNum === "0") currNum = "-";
+  else currNum = "-" + currNum;
+  updateDisplay();
 });
 
 equals.addEventListener("click", () => {
-  if (prevNum === "") return;
+  if (prevNum === "" || currNum === "") return;
   preCalcVal = `${prevNum} ${operator} ${currNum}`;
   operate(prevNum, operator, currNum);
   currNum = prevNum;
