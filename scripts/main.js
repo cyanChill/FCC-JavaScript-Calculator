@@ -47,8 +47,10 @@ function createDigitBtns() {
       numBtn.classList = "num btn";
       numBtn.innerText = val;
 
-      /* Add number button event listeners here */
-      numBtn.addEventListener("click", addDigit);
+      numBtn.addEventListener("click", (e) => {
+        let digit = e.target.innerText;
+        addDigit(digit);
+      });
 
       calculator.insertBefore(numBtn, referenceNode);
     });
@@ -58,11 +60,11 @@ function createDigitBtns() {
 function addOperatorEvents() {
   for (key in opeartorMap) {
     const referenceNode = document.querySelector(`#${key}`);
-    referenceNode.addEventListener("click", operatorClickFunc);
+    referenceNode.addEventListener("click", operatorActionFunc);
   }
 }
 
-function operatorClickFunc(e) {
+function operatorActionFunc(e) {
   continueCalculation();
   operate(prevNum, operator, currNum);
   operator = e.target.innerText;
@@ -76,12 +78,12 @@ function updateDisplay() {
   display.querySelector("#currCalc").innerText = currNum;
 }
 
-function addDigit(e) {
+function addDigit(digit) {
   currNum = `${currNum}`;
   if (currNum === "-0") currNum = "-";
-  if (currNum === "0") currNum = e.target.innerText;
-  else if (!currNum.includes("e")) currNum = `${currNum + e.target.innerText}`;
-  else currNum = `${+currNum * 10 + +e.target.innerText}`;
+  if (currNum === "0") currNum = digit;
+  else if (!currNum.includes("e")) currNum = `${currNum + digit}`;
+  else currNum = `${+currNum * 10 + +digit}`;
   if (currNum.length > 14) currNum = (+currNum).toExponential(2);
   updateDisplay();
 }
@@ -130,13 +132,15 @@ function continueCalculation() {
 
 clear.addEventListener("click", () => {
   prevNum = "";
-  preCalcVal = "";
   operator = "";
+  preCalcVal = "";
   currNum = "0";
   updateDisplay();
 });
 
-deleteBtn.addEventListener("click", () => {
+deleteBtn.addEventListener("click", deleteEvent);
+
+function deleteEvent() {
   currNum = `${currNum}`;
   if (currNum.length === 1) currNum = "0";
   else currNum = currNum.slice(0, -1);
@@ -146,13 +150,15 @@ deleteBtn.addEventListener("click", () => {
     prevNum = "";
   }
   updateDisplay();
-});
+}
 
-decimal.addEventListener("click", () => {
+decimal.addEventListener("click", decimalEvent);
+
+function decimalEvent() {
   currNum = `${currNum}`;
   if (!currNum.includes(".")) currNum += ".";
   updateDisplay();
-});
+}
 
 plusminus.addEventListener("click", () => {
   if (currNum[0] === "-") currNum = currNum.slice(1);
@@ -161,18 +167,24 @@ plusminus.addEventListener("click", () => {
   updateDisplay();
 });
 
-equals.addEventListener("click", () => {
+equals.addEventListener("click", equalsEvent);
+
+function equalsEvent() {
   if (prevNum === "" || currNum === "") return;
   preCalcVal = `${prevNum} ${operator} ${currNum}`;
   operate(prevNum, operator, currNum);
   currNum = prevNum;
   prevNum = "";
   updateDisplay();
-});
+}
 
-/* 
-    Keydown effects
-*/
+document.addEventListener("keydown", (e) => {
+  console.log(`Key "${e.key}" input  [event: keydown]`);
+  if (+e.key >= 0 && +e.key <= 9) addDigit(e.key);
+  if (e.key === "Backspace") deleteEvent();
+  if (e.key === ".") decimalEvent();
+  if (e.key === "=" || e.key === "Enter") equalsEvent();
+});
 
 /* Initialization */
 initialization();
