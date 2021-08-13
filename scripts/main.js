@@ -2,13 +2,15 @@ const calculator = document.querySelector("#calculator");
 const display = document.querySelector("#display");
 const clear = document.querySelector("#clear");
 const deleteBtn = document.querySelector("#delete");
+const decimal = document.querySelector("#decimal");
+const plusMinus = document.querySelector("#plusminus");
+const equals = document.querySelector("#equals");
+
+// Currently Unused:
 const divideBtn = document.querySelector("#divide");
 const multiplyBtn = document.querySelector("#multiply");
 const subtractBtn = document.querySelector("#subtract");
 const addBtn = document.querySelector("#add");
-const decimal = document.querySelector("#decimal");
-const plusMinus = document.querySelector("#plusminus");
-const equals = document.querySelector("#equals");
 
 /* Insert the number buttons before the button with the name of the key */
 const digitButtonMap = {
@@ -18,6 +20,13 @@ const digitButtonMap = {
   decimal: [0],
 };
 
+const opeartorMap = {
+  multiply: "×",
+  divide: "÷",
+  subtract: "-",
+  add: "+",
+};
+
 let prevNum = "";
 let preCalcVal = "";
 let operator = "";
@@ -25,6 +34,8 @@ let currNum = "0";
 
 function initialization() {
   createDigitBtns();
+  addOperatorEvents();
+  operator = "";
   updateDisplay();
 }
 
@@ -35,13 +46,27 @@ function createDigitBtns() {
       const numBtn = document.createElement("button");
       numBtn.classList = "num btn";
       numBtn.innerText = val;
-      /* 
-        Add number button event listeners here
-      */
+
+      /* Add number button event listeners here */
       numBtn.addEventListener("click", addDigit);
+
       calculator.insertBefore(numBtn, referenceNode);
     });
   }
+}
+
+function addOperatorEvents() {
+  for (key in opeartorMap) {
+    const referenceNode = document.querySelector(`#${key}`);
+    referenceNode.addEventListener("click", operatorClickFunc);
+  }
+}
+
+function operatorClickFunc(e) {
+  continueCalculation();
+  operate(prevNum, operator, currNum);
+  operator = e.target.innerText;
+  updateDisplay();
 }
 
 function updateDisplay() {
@@ -116,34 +141,6 @@ deleteBtn.addEventListener("click", () => {
     operator = "";
     prevNum = "";
   }
-  updateDisplay();
-});
-
-divideBtn.addEventListener("click", () => {
-  continueCalculation();
-  operate(prevNum, operator, currNum);
-  operator = "÷";
-  updateDisplay();
-});
-
-multiplyBtn.addEventListener("click", () => {
-  continueCalculation();
-  operate(prevNum, operator, currNum);
-  operator = "×";
-  updateDisplay();
-});
-
-subtractBtn.addEventListener("click", () => {
-  continueCalculation();
-  operate(prevNum, operator, currNum);
-  operator = "-";
-  updateDisplay();
-});
-
-addBtn.addEventListener("click", () => {
-  continueCalculation();
-  operate(prevNum, operator, currNum);
-  operator = "+";
   updateDisplay();
 });
 
