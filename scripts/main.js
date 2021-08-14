@@ -1,209 +1,166 @@
-const calculator = document.querySelector("#calculator");
-const display = document.querySelector("#display");
-const clear = document.querySelector("#clear");
-const deleteBtn = document.querySelector("#delete");
-const decimal = document.querySelector("#decimal");
-const plusMinus = document.querySelector("#plusminus");
-const equals = document.querySelector("#equals");
+const numBtns = [...document.querySelectorAll(".num")];
+const operatorBtns = [...document.querySelectorAll(".operator")];
+const currentCalculation = document.getElementById("currCalc");
+const prevCalculation = document.getElementById("prevCalc");
+const clearBtn = document.getElementById("clear");
+const deleteBtn = document.getElementById("delete");
+const decimalBtn = document.getElementById("decimal");
+const plusMinusBtn = document.getElementById("plusminus");
+const equalsBtn = document.getElementById("equals");
 
-/* Insert the number buttons before the button with the name of the key */
-const digitButtonMap = {
-  multiply: [7, 8, 9],
-  subtract: [4, 5, 6],
-  add: [1, 2, 3],
-  decimal: [0],
-};
+let first = "";
+let secondNum = "";
+let currentOperator = null;
 
-const opeartorMap = {
-  multiply: "×",
-  divide: "÷",
-  subtract: "-",
-  add: "+",
-};
+window.addEventListener("keydown", handleKeyboardInput);
+clearBtn.addEventListener("click", clear);
+deleteBtn.addEventListener("click", deleteEvent);
+decimalBtn.addEventListener("click", addDecimal);
+equalsBtn.addEventListener("click", evaluate);
 
-let prevNum = "";
-let preCalcVal = "";
-let operator = "";
-let currNum = "0";
+plusMinusBtn.addEventListener("click", plusMinus);
 
-function initialization() {
-  createDigitBtns();
-  addOperatorEvents();
-  operator = "";
-  updateDisplay();
-}
-
-function createDigitBtns() {
-  for (key in digitButtonMap) {
-    const referenceNode = document.querySelector(`#${key}`);
-    digitButtonMap[key].forEach((val) => {
-      const numBtn = document.createElement("button");
-      numBtn.classList = "num btn";
-      numBtn.innerText = val;
-
-      numBtn.addEventListener("click", (e) => {
-        let digit = e.target.innerText;
-        addDigit(digit);
-      });
-
-      calculator.insertBefore(numBtn, referenceNode);
-    });
-  }
-}
-
-function addOperatorEvents() {
-  for (key in opeartorMap) {
-    const referenceNode = document.querySelector(`#${key}`);
-    referenceNode.addEventListener("click", (e) => {
-      operand = e.target.innerText;
-      operatorActionFunc(operand);
-    });
-  }
-}
-
-function operatorActionFunc(operand) {
-  continueCalculation();
-  operate(prevNum, operator, currNum);
-  operator = operand;
-  updateDisplay();
-}
-
-function updateDisplay() {
-  const prevCalc = display.querySelector("#prevCalc");
-  if (preCalcVal) prevCalc.innerText = preCalcVal + "=";
-  else prevCalc.innerText = prevNum + operator;
-  display.querySelector("#currCalc").innerText = currNum;
-}
-
-function addDigit(digit) {
-  currNum = `${currNum}`;
-  if (currNum === "-0") currNum = "-";
-  if (currNum === "0") currNum = digit;
-  else if (!currNum.includes("e")) currNum = `${currNum + digit}`;
-  else {
-    let [val, exp] = currNum.split("e");
-    if (exp < 0)
-      currNum = `${
-        (+currNum * (10 ** (-exp + 1) + +digit)) / 10 ** (-exp + 1)
-      }`;
-    else currNum = `${+currNum * 10 + +digit}`;
-  }
-
-  if (currNum.length > 14) currNum = (+currNum).toExponential(2);
-  updateDisplay();
-}
-
-function add(num1, num2) {
-  return +num1 + +num2;
-}
-
-function subtract(num1, num2) {
-  return +num1 - +num2;
-}
-
-function multiply(num1, num2) {
-  return +num1 * +num2;
-}
-
-function divide(num1, num2) {
-  if (+num2 === 0) {
-    alert("Error: Can't divide by 0.");
-    return false;
-  }
-  return +num1 / +num2;
-}
-
-function operate(num1, operand, num2) {
-  if (num2 === "") return false;
-  let newPrevNum = 0;
-  if (num1 === "") num1 = "0";
-  if (operand === "÷") newPrevNum = divide(num1, num2);
-  else if (operand === "×") newPrevNum = multiply(num1, num2);
-  else if (operand === "-") newPrevNum = subtract(num1, num2);
-  else newPrevNum = add(num1, num2); // Default case (addition)
-  if (newPrevNum === false) return false;
-  if (`${newPrevNum}`.length > 14) newPrevNum = newPrevNum.toExponential(5);
-  prevNum = newPrevNum;
-  currNum = "";
-  return true;
-}
-
-function continueCalculation() {
-  if (preCalcVal) {
-    prevNum = currNum;
-    operator = "+"; // "reset" operator as prev operator will still be used
-    preCalcVal = "";
-    currNum = "";
-  }
-}
-
-clear.addEventListener("click", () => {
-  prevNum = "";
-  operator = "";
-  preCalcVal = "";
-  currNum = "0";
-  updateDisplay();
+numBtns.forEach((btn) => {
+  btn.addEventListener("click", () => addDigit(btn.textContent));
 });
 
-deleteBtn.addEventListener("click", deleteEvent);
+operatorBtns.forEach((btn) => {
+  btn.addEventListener("click", () => setOperator(btn.textContent));
+});
+
+function setOperator(operator) {
+  let failedEvaluate = false;
+  if (currentOperator !== null) failedEvaluate = evaluate();
+  if (failedEvaluate) {
+    currentOperator = operator;
+    prevCalculation.textContent = `${firstNum} ${currentOperator}`;
+    return;
+  }
+  firstNum = currentCalculation.textContent;
+  currentOperator = operator;
+  prevCalculation.textContent = `${firstNum} ${currentOperator}`;
+  currentCalculation.textContent = "";
+}
+
+function addDigit(num) {
+  const currCalc = currentCalculation.textContent;
+  if (currCalc === "-0") currentCalculation.textContent = `-${num}`;
+  else if (currCalc === "0" || currCalc === "")
+    currentCalculation.textContent = num;
+  else if (!currCalc.includes("e"))
+    currentCalculation.textContent = `${currCalc + num}`;
+  else {
+    let [val, exp] = currCalc.split("e");
+    if (Number(exp) < 0) return;
+    else currentCalculation.textContent = `${+currCalc * 10 + +num}`;
+  }
+
+  currentCalculation.textContent = roundNumber(currentCalculation.textContent);
+}
+
+function addDecimal() {
+  const currCalc = currentCalculation.textContent;
+  if (currCalc === "") currentCalculation.textContent = "0";
+  if (!currCalc.includes(".")) currentCalculation.textContent += ".";
+}
+
+function evaluate() {
+  const currCalc = currentCalculation.textContent;
+  if (currentOperator === null || !currCalc) return true;
+  if (currentOperator === "÷" && currentCalculation.textContent === "0") {
+    alert("You can't divide by 0!");
+    return true;
+  }
+  secondNum = currentCalculation.textContent;
+  currentCalculation.textContent = roundNumber(
+    operate(currentOperator, firstNum, secondNum)
+  );
+  prevCalculation.textContent = `${firstNum} ${currentOperator} ${secondNum} =`;
+  currentOperator = null;
+}
+
+function roundNumber(num) {
+  if (`${num}`.length > 14) return (+num).toExponential(4);
+  return num;
+}
+
+function clear() {
+  currentCalculation.textContent = "0";
+  prevCalculation.textContent = "";
+  firstNum = "";
+  secondNum = "";
+  currentOperator = null;
+}
 
 function deleteEvent() {
-  currNum = `${currNum}`;
-  if (currNum.length === 1) currNum = "";
-  else currNum = currNum.slice(0, -1);
-  if (preCalcVal) {
-    preCalcVal = "";
-    operator = "";
-    prevNum = "";
+  currentCalculation.textContent = currentCalculation.textContent.slice(0, -1);
+}
+
+function plusMinus() {
+  const currCalc = currentCalculation.textContent;
+  if (currCalc[0] === "-") currentCalculation.textContent = currCalc.slice(1);
+  else if (currCalc === "0") currentCalculation.textContent = "-";
+  else currentCalculation.textContent = `-${currCalc}`;
+}
+
+function add(a, b) {
+  return a + b;
+}
+
+function subtract(a, b) {
+  return a - b;
+}
+
+function multiply(a, b) {
+  return a * b;
+}
+
+function divide(a, b) {
+  return a / b;
+}
+
+function operate(operator, a, b) {
+  a = Number(a);
+  b = Number(b);
+  switch (operator) {
+    case "+":
+      return add(a, b);
+    case "-":
+      return subtract(a, b);
+    case "×":
+      return multiply(a, b);
+    case "÷":
+      if (b === 0) return null;
+      else return divide(a, b);
+    default:
+      return null;
   }
-  updateDisplay();
 }
 
-decimal.addEventListener("click", decimalEvent);
-
-function decimalEvent() {
-  currNum = `${currNum}`;
-  if (!currNum.includes(".")) currNum += ".";
-  updateDisplay();
+function convertOperator(keyboardOperator) {
+  if (keyboardOperator === "/") return "÷";
+  if (keyboardOperator === "*") return "×";
+  if (keyboardOperator === "-") return "-";
+  if (keyboardOperator === "+") return "+";
 }
 
-plusminus.addEventListener("click", () => {
-  if (currNum[0] === "-") currNum = currNum.slice(1);
-  else if (currNum === "0") currNum = "-";
-  else currNum = "-" + currNum;
-  updateDisplay();
-});
-
-equals.addEventListener("click", equalsEvent);
-
-function equalsEvent() {
-  if (prevNum === "" || currNum === "") return;
-  let calculationDisplay = `${prevNum} ${operator} ${currNum}`;
-  if (!operate(prevNum, operator, currNum)) return;
-  preCalcVal = calculationDisplay;
-  currNum = prevNum;
-  prevNum = "";
-  updateDisplay();
-}
-
-document.addEventListener("keydown", (e) => {
-  if (+e.key >= 0 && +e.key <= 9) addDigit(e.key);
+function handleKeyboardInput(e) {
+  if (e.key >= 0 && e.key <= 9) addDigit(e.key);
   if (e.key === "Backspace") deleteEvent();
-  if (e.key === ".") decimalEvent();
-  if (e.key === "=" || e.key === "Enter") equalsEvent();
-  if (e.key === "+" || e.key === "-") operatorActionFunc(e.key);
-  if (e.key === "*") operatorActionFunc("×");
-  if (e.key === "/") operatorActionFunc("÷");
+  if (e.key === ".") addDecimal();
+  if (e.key === "=" || e.key === "Enter") evaluate();
+  if (e.key === "+" || e.key === "-" || e.key === "*" || e.key === "/")
+    setOperator(convertOperator(e.key));
   findFocus(e.key);
-});
+}
 
 function findFocus(innerText) {
   let btns = [...document.querySelectorAll("button")];
   for (let i = 0; i < btns.length; i++) {
     let btnVal = btns[i].innerHTML;
     if (btnVal === `<i class="fas fa-backspace"></i>`) btnVal = "Backspace";
-    if (btnVal === "×") btnVal = "*";
-    if (btnVal === "÷") btnVal = "/";
+    if (innerText === "*" || innerText === "/")
+      innerText = convertOperator(innerText);
     if (innerText === "Enter") innerText = "=";
     if (btnVal === innerText) {
       btns[i].focus();
@@ -211,6 +168,3 @@ function findFocus(innerText) {
     }
   }
 }
-
-/* Initialization */
-initialization();
