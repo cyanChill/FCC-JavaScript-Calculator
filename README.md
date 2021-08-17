@@ -6,4 +6,6 @@ This branch is for The Odin Project JavaScript Calculator Project, to see FreeCo
 
 This calculator will only evaluate a single pair of numbers at a time.
 
+## Project Info
+
 More about the project can be found at: https://www.theodinproject.com/paths/foundations/courses/foundations/lessons/calculator
